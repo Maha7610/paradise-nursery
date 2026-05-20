@@ -1,29 +1,55 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import { removeItem, updateQuantity } from "../redux/cartSlice";
 
-const AboutUs = () => {
+const CartItem = ({ item }) => {
+  const dispatch = useDispatch();
+
+  const handleIncrease = () => {
+    dispatch(updateQuantity({ id: item.id, quantity: item.quantity + 1 }));
+  };
+
+  const handleDecrease = () => {
+    if (item.quantity > 1) {
+      dispatch(updateQuantity({ id: item.id, quantity: item.quantity - 1 }));
+    }
+  };
+
   return (
-    <div style={{ padding: "20px", maxWidth: "800px", margin: "auto" }}>
-      <h1>About Paradise Nursery</h1>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: "10px",
+        borderBottom: "1px solid #ccc",
+      }}
+    >
+      {/* Plant Image */}
+      <img src={item.image} alt={item.name} width="60" />
 
-      <p>
-        Paradise Nursery is a modern online plant store dedicated to bringing
-        nature closer to your home. We specialize in a wide variety of indoor
-        and outdoor plants that enhance your living space and improve air quality.
-      </p>
+      {/* Name */}
+      <h4>{item.name}</h4>
 
-      <p>
-        Our mission is to promote a greener lifestyle by making plant shopping
-        simple, affordable, and accessible for everyone. We carefully select
-        each plant to ensure quality, freshness, and sustainability.
-      </p>
+      {/* Price */}
+      <p>${item.price}</p>
 
-      <p>
-        Whether you are a beginner or an experienced plant lover, Paradise
-        Nursery offers something for everyone to create a peaceful and green
-        environment.
-      </p>
+      {/* Quantity Controls */}
+      <div>
+        <button onClick={handleDecrease}>-</button>
+        <span style={{ margin: "0 10px" }}>{item.quantity}</span>
+        <button onClick={handleIncrease}>+</button>
+      </div>
+
+      {/* Total */}
+      <p>${item.price * item.quantity}</p>
+
+      {/* Remove */}
+      <button onClick={() => dispatch(removeItem(item.id))}>
+        Delete
+      </button>
     </div>
   );
 };
 
-export default AboutUs;
+export default CartItem;
